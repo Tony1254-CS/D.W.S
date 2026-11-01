@@ -87,10 +87,28 @@ export default function App() {
 
       <aside className="dossier">
         {act === 0 && <>
-          <h1>Act I · Atlas</h1>
-          <p className="lede">One full analysis. The flagship case is the Jamuna at Chilmari — the only case this observatory opens.</p>
-          <div className="row"><span>Jamuna · Chilmari reach</span><Stamp label="DERIVED" /></div>
-          <p>Full Atlas pins (derived examples, contextual cases, planned applications) arrive in the P1 slice. Planned pins never open an analysis.</p>
+          <div className="hero">
+            <div className="kick">NASA Space Apps 2026 · Dancing with the SARs</div>
+            <h1>The river moves.<br /><em>The radar keeps the score.</em></h1>
+            <p className="sub">FluviSAR is a radar observatory that argues with itself. It shows where NISAR sees the Jamuna changing — then attacks its own finding. What survives is the Robust Core.</p>
+            <div className="herostats">
+              <div className="hstat"><b>{man.products.length}</b><span>real NISAR dates</span></div>
+              <div className="hstat"><b>{patches.length}</b><span>candidates under test</span></div>
+              <div className="hstat"><b>{patches.reduce((s, p) => s + p.robustAreaHa, 0).toFixed(1)} ha</b><span>robust core, all patches</span></div>
+              <div className="hstat"><b>{man.crid}</b><span>CRID · {man.maturity}</span></div>
+            </div>
+          </div>
+          <h2>Flagship case — select to investigate</h2>
+          <div className="casecards">
+            {patches.map(p => (
+              <button key={p.id} className="casecard ember" onClick={() => { setSel(p); setAct(1); }}>
+                <h3>{p.id} · {p.title}</h3>
+                <p>{p.question}</p>
+                <div className="ccrow"><span>Robust {p.robustAreaHa} ha</span><span>Δ γ⁰ HH +{p.calibrated.dDbHH} dB</span><Stamp label={p.label} /></div>
+              </button>
+            ))}
+          </div>
+          <p className="note">One full analysis, deliberately. Secondary cases open only when a suitable NISAR product and a phenomenon-specific method exist — planned pins never open an analysis, and no global “validated sites” count is shown.</p>
         </>}
         {act === 1 && <>
           <h1>Act II · Memory</h1>
