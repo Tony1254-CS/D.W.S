@@ -39,7 +39,7 @@ export default function App() {
   const [packMsg, setPackMsg] = useState('');
   const [audience, setAudience] = useState<Audience>('analyst');
   const [patches, setPatches] = useState<Patch[]>([]);
-  const [act, setAct] = useState(1); // II Memory default
+  const [act, setAct] = useState(0); // landing first, like the previous web
   const [sel, setSel] = useState<Patch | null>(null);
   const [methods, setMethods] = useState(false);
   const [online, setOnline] = useState(navigator.onLine);
@@ -65,7 +65,11 @@ export default function App() {
     <div className="app">
       <header className="topbar">
         <div className="wordmark">FluviSAR</div>
-        <div className="slug">{man.caseSlug}</div>
+        <nav className="navlinks">
+          {ACTS.map((a, i) => (
+            <button key={a.n} className={i === act ? 'navlink active' : 'navlink'} onClick={() => setAct(i)}>{a.name}</button>
+          ))}
+        </nav>
         <div className="topright">
           <span className="chip">NISAR L2 GCOV · {man.maturity} · CRID {man.crid}</span>
           <span className="chip">{online ? 'Online' : 'Offline pack'}</span>
@@ -77,39 +81,34 @@ export default function App() {
         </div>
       </header>
 
-      <nav className="rail">
-        {ACTS.map((a, i) => (
-          <button key={a.n} className={i === act ? 'act active' : 'act'} onClick={() => setAct(i)}>
-            <span className="roman">{a.n}</span><span className="actname">{a.name}</span>
-          </button>
-        ))}
-      </nav>
-
+      {act === 0 ? (
+      <div className="home"><div className="homewrap">
+        <div className="hero">
+          <div className="kick">NASA Space Apps 2026 · Dancing with the SARs</div>
+          <h1>The river moves.<br /><em>The radar keeps the score.</em></h1>
+          <p className="sub">FluviSAR is a radar observatory that argues with itself. It shows where NISAR sees the Jamuna changing — then attacks its own finding in public. What survives is the Robust Core.</p>
+          <div className="herostats">
+            <div className="hstat"><b>{man.products.length}</b><span>real NISAR dates</span></div>
+            <div className="hstat"><b>{patches.length}</b><span>candidates under test</span></div>
+            <div className="hstat"><b>{patches.reduce((s, p) => s + p.robustAreaHa, 0).toFixed(1)} ha</b><span>robust core, all patches</span></div>
+            <div className="hstat"><b>{man.crid}</b><span>CRID · {man.maturity}</span></div>
+          </div>
+        </div>
+        <h2 className="homesec">Flagship case — Jamuna at Chilmari · pick a candidate to investigate</h2>
+        <div className="casecards home-grid">
+          {patches.map(p => (
+            <button key={p.id} className="casecard ember" onClick={() => { setSel(p); setAct(1); }}>
+              <h3>{p.id} · {p.title}</h3>
+              <p>{p.question}</p>
+              <div className="ccrow"><span>Robust {p.robustAreaHa} ha</span><span>Δ γ⁰ HH +{p.calibrated.dDbHH} dB</span><Stamp label={p.label} /></div>
+            </button>
+          ))}
+        </div>
+        <p className="note">One full analysis, deliberately. Secondary cases open only when a suitable NISAR product and a phenomenon-specific method exist — planned pins never open an analysis, and no global “validated sites” count is shown. Use the top navigation: Memory → Reality → Break → Passport → Impact.</p>
+      </div></div>
+      ) : (
+      <div className="main">
       <aside className="dossier">
-        {act === 0 && <>
-          <div className="hero">
-            <div className="kick">NASA Space Apps 2026 · Dancing with the SARs</div>
-            <h1>The river moves.<br /><em>The radar keeps the score.</em></h1>
-            <p className="sub">FluviSAR is a radar observatory that argues with itself. It shows where NISAR sees the Jamuna changing — then attacks its own finding. What survives is the Robust Core.</p>
-            <div className="herostats">
-              <div className="hstat"><b>{man.products.length}</b><span>real NISAR dates</span></div>
-              <div className="hstat"><b>{patches.length}</b><span>candidates under test</span></div>
-              <div className="hstat"><b>{patches.reduce((s, p) => s + p.robustAreaHa, 0).toFixed(1)} ha</b><span>robust core, all patches</span></div>
-              <div className="hstat"><b>{man.crid}</b><span>CRID · {man.maturity}</span></div>
-            </div>
-          </div>
-          <h2>Flagship case — select to investigate</h2>
-          <div className="casecards">
-            {patches.map(p => (
-              <button key={p.id} className="casecard ember" onClick={() => { setSel(p); setAct(1); }}>
-                <h3>{p.id} · {p.title}</h3>
-                <p>{p.question}</p>
-                <div className="ccrow"><span>Robust {p.robustAreaHa} ha</span><span>Δ γ⁰ HH +{p.calibrated.dDbHH} dB</span><Stamp label={p.label} /></div>
-              </button>
-            ))}
-          </div>
-          <p className="note">One full analysis, deliberately. Secondary cases open only when a suitable NISAR product and a phenomenon-specific method exist — planned pins never open an analysis, and no global “validated sites” count is shown.</p>
-        </>}
         {act === 1 && <>
           <h1>Act II · Memory</h1>
           <p className="lede">The river, date by date — only on dates the satellite really looked.</p>
@@ -210,8 +209,10 @@ export default function App() {
           {sel && <span className="selinfo">{sel.id} · {sel.robustAreaHa} ha robust · {sel.totalAreaHa} ha candidate <Stamp label={sel.label} /></span>}
         </div>
       </main>
+      </div>
+      )}
 
-      <footer className="score">
+      {act === 1 && <footer className="score">
         <div className="scoretitle">THE SCORE · 12-day cycles · notes exist only for real acquisitions</div>
         <div className="notes">
           {man.products.map(p => (
@@ -222,7 +223,7 @@ export default function App() {
           <div className="silence" title={man.gap.note}>{man.gap.label} · cycle 027 · no granule</div>
         </div>
         <div className="drivers">GloFAS discharge at pair: {dis[man.pair[0]]} → {dis[man.pair[1]]} m³/s <Stamp label="DERIVED" /> <span className="note">stage gauge: {man.drivers.stage.status}</span></div>
-      </footer>
+      </footer>}
 
       {methods && <div className="modal" onClick={() => setMethods(false)}>
         <div className="paper" onClick={e => e.stopPropagation()}>

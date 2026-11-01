@@ -17,10 +17,9 @@ html,body{margin:0;background:var(--ink-900);color:var(--bone);font-family:var(-
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 @keyframes pulseRing{0%{box-shadow:0 0 0 0 rgba(57,196,217,.45)}100%{box-shadow:0 0 0 12px rgba(57,196,217,0)}}
 
-.app{display:grid;grid-template-columns:76px 400px 1fr;grid-template-rows:56px 1fr 148px;height:100vh;
-  grid-template-areas:'top top top' 'rail dossier stage' 'rail score score';
+.app{display:flex;flex-direction:column;height:100vh;
   background:radial-gradient(1100px 500px at 78% -10%,rgba(57,196,217,.10),transparent 60%),radial-gradient(900px 480px at 8% 110%,rgba(228,87,46,.07),transparent 55%),var(--ink-900)}
-.topbar{grid-area:top;display:flex;align-items:center;gap:22px;padding:0 18px;background:var(--glass);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);z-index:5}
+.topbar{display:flex;align-items:center;gap:22px;padding:0 18px;background:var(--glass);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);z-index:5}
 .wordmark{font-family:var(--serif);font-weight:700;font-size:25px;letter-spacing:.01em;color:#fff}
 .wordmark::after{content:'';display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--water);margin-left:7px;animation:pulseRing 2.4s var(--ease) infinite}
 .slug{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;color:var(--dim)}
@@ -38,7 +37,7 @@ select.chip option{background:var(--ink-800);color:var(--bone)}
 .act.active{color:var(--water-strong)}
 .act.active::before{content:'';position:absolute;left:0;top:22%;height:56%;width:3px;border-radius:2px;background:var(--water)}
 
-.dossier{grid-area:dossier;background:var(--glass);backdrop-filter:blur(14px);color:var(--bone);padding:24px 22px;overflow-y:auto;border-right:1px solid var(--line);animation:fadeUp .6s var(--ease) both}
+.dossier{width:400px;flex:none;background:var(--glass);backdrop-filter:blur(14px);color:var(--bone);padding:24px 22px;overflow-y:auto;border-right:1px solid var(--line);animation:fadeUp .6s var(--ease) both}
 .dossier::-webkit-scrollbar{width:4px}.dossier::-webkit-scrollbar-thumb{background:var(--ink-500);border-radius:2px}
 .dossier h1{font-family:var(--serif);font-weight:700;font-size:30px;line-height:1.12;margin:0 0 12px;color:#fff;animation:fadeUp .7s var(--ease) both}
 .dossier h2{font-family:var(--mono);font-weight:500;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;margin:26px 0 10px;color:var(--water-strong)}
@@ -58,7 +57,7 @@ select.chip option{background:var(--ink-800);color:var(--bone)}
 .stamp-unverified{color:var(--dim)}.stamp-estimated{color:var(--gold)}.stamp-refuted{color:#ff7a5c;border-color:#ff7a5c}
 .stamp-simulated{color:#000;background:repeating-linear-gradient(45deg,#FFC400 0 6px,#000 6px 12px);border-color:#000}
 
-.stage{grid-area:stage;background:transparent;position:relative;display:flex;flex-direction:column;min-width:0}
+.stage{flex:1;background:transparent;position:relative;display:flex;flex-direction:column;min-width:0}
 .stagebar{display:flex;gap:8px;padding:10px 16px}
 .chip.on{border-color:var(--water);color:var(--water-strong);background:rgba(57,196,217,.1)}
 .map{flex:1;width:100%;min-height:0}
@@ -71,7 +70,7 @@ select.chip option{background:var(--ink-800);color:var(--bone)}
 .sw.ghost{border:1px dashed var(--water)}
 .selinfo{margin-left:auto;color:var(--bone)}
 
-.score{grid-area:score;background:rgba(14,17,19,.72);backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:12px 18px;overflow:hidden}
+.score{flex:none;background:rgba(14,17,19,.72);backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:12px 18px;overflow:hidden}
 .scoretitle{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--dim);margin-bottom:9px}
 .notes{display:flex;align-items:flex-start;gap:4px}
 .score .note{background:none;border:none;color:var(--dim);display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;padding:2px 5px;font-family:var(--mono)}
@@ -121,7 +120,7 @@ select.chip option{background:var(--ink-800);color:var(--bone)}
 /* Hero (Act I) — the old web's cinematic opening, on real case numbers */
 .hero{padding:8px 2px 4px}
 .hero .kick{font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--water-strong);text-transform:uppercase}
-.hero h1{font-size:clamp(34px,3.4vw,52px);line-height:1.04;margin:12px 0 10px;position:relative}
+.hero h1{font-family:var(--serif);font-weight:700;color:#fff;font-size:clamp(34px,3.4vw,52px);line-height:1.04;margin:12px 0 10px;position:relative}
 .hero h1 em{font-style:normal;color:var(--water-strong)}
 .hero .sub{font-size:16.5px;line-height:1.55;color:var(--bone);max-width:34ch}
 .herostats{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:20px 0 6px}
@@ -137,3 +136,24 @@ select.chip option{background:var(--ink-800);color:var(--bone)}
 .casecard p{margin:0 0 8px;font-size:13.5px;line-height:1.5;color:var(--dim)}
 .casecard .ccrow{display:flex;gap:14px;font-family:var(--mono);font-size:11.5px;color:var(--bone);align-items:center;flex-wrap:wrap}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* Navbar (previous web pattern: fixed glass bar, links with underline sweep) */
+.navlinks{display:flex;gap:2px;margin:0 auto}
+.navlink{position:relative;background:none;border:none;color:var(--dim);font-family:var(--sans);font-weight:400;font-size:14.5px;padding:8px 13px;cursor:pointer;transition:color .25s var(--ease)}
+.navlink::after{content:'';position:absolute;left:13px;right:13px;bottom:2px;height:2px;border-radius:2px;background:var(--water);transform:scaleX(0);transform-origin:left;transition:transform .3s var(--ease)}
+.navlink:hover{color:var(--bone)}
+.navlink:hover::after{transform:scaleX(.5)}
+.navlink.active{color:#fff;font-weight:500}
+.navlink.active::after{transform:scaleX(1)}
+.main{flex:1;display:flex;min-height:0}
+/* Home / landing */
+.home{flex:1;overflow-y:auto;padding:56px 24px 70px;animation:fadeUp .6s var(--ease) both}
+.homewrap{max-width:1060px;margin:0 auto}
+.home .hero{text-align:left;padding:0}
+.home .hero h1{font-size:clamp(44px,6vw,76px)}
+.home .hero .sub{font-size:18.5px;max-width:56ch}
+.home .herostats{grid-template-columns:repeat(4,1fr);max-width:860px}
+.homesec{font-family:var(--mono);font-weight:500;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--water-strong);margin:38px 0 14px}
+.casecards.home-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.home .note{max-width:72ch;margin-top:22px}
+@media (max-width:900px){.casecards.home-grid{grid-template-columns:1fr}.home .herostats{grid-template-columns:1fr 1fr}.navlinks{overflow-x:auto}}
