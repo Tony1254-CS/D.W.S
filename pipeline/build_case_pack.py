@@ -65,11 +65,13 @@ manifest={
  "claims":claims,
  "gap":{"label":"SILENCE","note":"Cycle 027 (expected 2026-08-02) has no GCOV granule — verified zero in CMR search (Step 0 audit). Brief lists a permanent instrument gap 2026-07-27 22:03 UTC to 2026-08-10 00:55 UTC; the missing cycle falls inside it."},
 }
+manifest["scenesNote"]="Pair-date scenes are calibrated dB renders (fixed -25..0 dB stretch, gcov_process.py); shipped for the A/B swipe. Other dates' browse renders are not shipped in this pack."
 manifest["grids"]={"aoiBoundsLonLat":[89.58,25.44,89.82,25.70],"blockGrid":"64x64 block means over the calibrated pair window (gcov_process.py AOI)","deltaGridNote":"Mean calibrated HH gamma-0 change per block, tie-point referenced. Block extent is not stored in the source file, so the Break lab reports exact block counts and shares, never hectares, for this grid. Hectares come only from the native 20 m ensemble.","walkGridNote":"2026-10-13 NISAR HH gamma-0 block means in dB."}
 canon=json.dumps(manifest,sort_keys=True,ensure_ascii=False)
 manifest["manifestHash"]="sha256:"+hashlib.sha256(canon.encode()).hexdigest()
 OUT.mkdir(parents=True,exist_ok=True)
 (OUT/"manifest.json").write_text(json.dumps(manifest,indent=1,ensure_ascii=False))
+(OUT/"scenes.json").write_text(json.dumps({d: json.loads((SRC/"scenes.json").read_text())[d] for d in pair}))
 (OUT/"grids.json").write_text(json.dumps({"deltaGrid":tc["deltaGrid"],"walkGrid":tc["walkGrid"]},indent=1))
 (OUT/"case.json").write_text(json.dumps({"caseId":"jamuna-chilmari","patches":patches},indent=1,ensure_ascii=False))
 reality={"task0":"Step 0 audit 2026-10-31 (TRACE Field), re-used for FluviSAR — same AOI/track",

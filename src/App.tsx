@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { BreakLab, Lens, type Grid } from './lab';
+import { FluviMap, Swipe, prefetchOfflinePack } from './map';
 
 type Label = 'MEASURED' | 'DERIVED' | 'CROSSCHECKED' | 'UNVERIFIED' | 'SIMULATED';
 interface Product { granule: string; date: string; polMode: string; channelsPresent: string[]; bandwidthMHz: number; orbitAccuracy: string }
@@ -31,6 +32,9 @@ const poly = (pts: number[][], proj: (p: number[]) => readonly [number, number])
 export default function App() {
   const [man, setMan] = useState<Manifest | null>(null);
   const [grids, setGrids] = useState<{ deltaGrid: Grid; walkGrid: Grid } | null>(null);
+  const [scenes, setScenes] = useState<Record<string, string> | null>(null);
+  const [stageView, setStageView] = useState<'map' | 'svg' | 'swipe'>('map');
+  const [packMsg, setPackMsg] = useState('');
   const [patches, setPatches] = useState<Patch[]>([]);
   const [act, setAct] = useState(1); // II Memory default
   const [sel, setSel] = useState<Patch | null>(null);
@@ -39,6 +43,7 @@ export default function App() {
 
   useEffect(() => {
     fetch('/case/jamuna-chilmari/manifest.json').then(r => r.json()).then(setMan);
+    fetch('/case/jamuna-chilmari/scenes.json').then(r => r.json()).then(setScenes);
     fetch('/case/jamuna-chilmari/grids.json').then(r => r.json()).then(setGrids);
     fetch('/case/jamuna-chilmari/case.json').then(r => r.json()).then(d => { setPatches(d.patches); setSel(d.patches[0]); });
     const f = () => setOnline(navigator.onLine);
@@ -60,6 +65,7 @@ export default function App() {
         <div className="topright">
           <span className="chip">NISAR L2 GCOV · {man.maturity} · CRID {man.crid}</span>
           <span className="chip">{online ? 'Online' : 'Offline pack'}</span>
+          <button className="chip btn" onClick={async () => { setPackMsg('caching…'); setPackMsg(await prefetchOfflinePack()); }}>Offline pack{packMsg ? ` · ${packMsg}` : ''}</button>
           <button className="chip btn" onClick={() => setMethods(true)}>Methods &amp; Limits</button>
         </div>
       </header>
@@ -142,6 +148,14 @@ export default function App() {
       </aside>
 
       <main className="stage">
+        <div className="stagebar">
+          <button className={stageView === 'map' ? 'chip btn on' : 'chip btn'} onClick={() => setStageView('map')}>Map</button>
+          <button className={stageView === 'swipe' ? 'chip btn on' : 'chip btn'} onClick={() => setStageView('swipe')}>Swipe A↔B</button>
+          <button className={stageView === 'svg' ? 'chip btn on' : 'chip btn'} onClick={() => setStageView('svg')}>Plate</button>
+        </div>
+        {stageView === 'map' && <FluviMap patches={patches} selId={sel?.id} onSelect={id => { const p = patches.find(q => q.id === id); if (p) setSel(p); }} onFallback={() => setStageView('svg')} />}
+        {stageView === 'swipe' && (scenes ? <Swipe scenes={scenes} pair={man.pair} /> : <p className="note pad">Loading pair scenes…</p>)}
+        {stageView === 'svg' && (
         <svg viewBox="0 0 760 430" className="map" role="img" aria-label="Patch map: robust core solid, contested fringe hatched, July water ghost dotted">
           <defs>
             <pattern id="hatch" width="7" height="7" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
@@ -156,7 +170,7 @@ export default function App() {
               <text x={proj(p.centroid)[0]} y={proj(p.centroid)[1]} className="plabel">{p.id}</text>
             </g>
           ))}
-        </svg>
+        </svg>)}
         <div className="legend">
           <span><i className="sw solid" /> Robust Core</span>
           <span><i className="sw hatch" /> Contested Fringe</span>

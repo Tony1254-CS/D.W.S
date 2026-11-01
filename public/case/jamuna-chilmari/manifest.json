@@ -315,6 +315,7 @@
   "label": "SILENCE",
   "note": "Cycle 027 (expected 2026-08-02) has no GCOV granule — verified zero in CMR search (Step 0 audit). Brief lists a permanent instrument gap 2026-07-27 22:03 UTC to 2026-08-10 00:55 UTC; the missing cycle falls inside it."
  },
+ "scenesNote": "Pair-date scenes are calibrated dB renders (fixed -25..0 dB stretch, gcov_process.py); shipped for the A/B swipe. Other dates' browse renders are not shipped in this pack.",
  "grids": {
   "aoiBoundsLonLat": [
    89.58,
@@ -326,5 +327,5 @@
   "deltaGridNote": "Mean calibrated HH gamma-0 change per block, tie-point referenced. Block extent is not stored in the source file, so the Break lab reports exact block counts and shares, never hectares, for this grid. Hectares come only from the native 20 m ensemble.",
   "walkGridNote": "2026-10-13 NISAR HH gamma-0 block means in dB."
  },
- "manifestHash": "sha256:7a6576b4ee4269786db5d3a8f45340612188aa4212c6a73436912348fed0ed59"
+ "manifestHash": "sha256:ee174743a227a336601c41e717fea9ad3a839399ea709838426ee0a27c20f47c"
 }
