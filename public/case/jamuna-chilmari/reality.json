@@ -1,0 +1,30 @@
+{
+ "task0": "Step 0 audit 2026-10-31 (TRACE Field), re-used for FluviSAR \u2014 same AOI/track",
+ "nisarDates": [
+  "2026-06-27",
+  "2026-07-09",
+  "2026-07-21",
+  "2026-08-14",
+  "2026-08-26",
+  "2026-09-07",
+  "2026-09-19",
+  "2026-10-01",
+  "2026-10-13"
+ ],
+ "count": 9,
+ "hvhv": "present on all 9 dates (DH; QP on 2026-08-26, 2026-09-19)",
+ "gcovH5OnDisk": [
+  "2026-07-09",
+  "2026-10-13"
+ ],
+ "browseOnlyDates": [
+  "2026-06-27",
+  "2026-07-21",
+  "2026-08-14",
+  "2026-08-26",
+  "2026-09-07",
+  "2026-09-19",
+  "2026-10-01"
+ ],
+ "decisionRule": "9 same-track PROVISIONAL dates >= 4 -> full plan (brief section 7), with Break lab anchored on the calibrated pair until remaining .h5 downloads land"
+}

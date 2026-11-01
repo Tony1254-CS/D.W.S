@@ -1,0 +1,319 @@
+{
+ "caseId": "jamuna-chilmari",
+ "caseSlug": "JAMUNA · CHILMARI REACH · TRACK 19",
+ "aoi": {
+  "site": {
+   "name": "Chilmari, Jamuna",
+   "lat": 25.5667,
+   "lon": 89.6917
+  },
+  "track": 19,
+  "frame": 76
+ },
+ "analysisGridM": 20,
+ "pixelAreaM2": 400,
+ "haPerPixel": 0.04,
+ "collection": "NISAR_L2_GCOV_PROVISIONAL_V1",
+ "doi": "10.5067/NIL2GCOV-P1",
+ "crid": "P05023",
+ "maturity": "PROVISIONAL",
+ "variable": "gamma-0 (γ⁰) power, dB = 10·log10(γ⁰)",
+ "sigmaNote": "sigma-0 is not native; only via rtcGammaToSigmaFactor layer",
+ "products": [
+  {
+   "granule": "NISAR_L2_PR_GCOV_024_019_D_076_2005_DHDH_M_20260627T124243_20260627T124317_P05023_N_F_J_001",
+   "date": "2026-06-27",
+   "track": 19,
+   "frame": 76,
+   "direction": "descending",
+   "bandwidthMHz": 20,
+   "polMode": "DH",
+   "channelsPresent": [
+    "HHHH",
+    "HVHV"
+   ],
+   "nativeGridM": 20,
+   "orbitAccuracy": "N",
+   "crid": "P05023",
+   "maturity": "PROVISIONAL"
+  },
+  {
+   "granule": "NISAR_L2_PR_GCOV_025_019_D_076_2005_DHDH_M_20260709T124242_20260709T124317_P05023_N_F_J_001",
+   "date": "2026-07-09",
+   "track": 19,
+   "frame": 76,
+   "direction": "descending",
+   "bandwidthMHz": 20,
+   "polMode": "DH",
+   "channelsPresent": [
+    "HHHH",
+    "HVHV"
+   ],
+   "nativeGridM": 20,
+   "orbitAccuracy": "N",
+   "crid": "P05023",
+   "maturity": "PROVISIONAL"
+  },
+  {
+   "granule": "NISAR_L2_PR_GCOV_026_019_D_076_4005_DHDH_A_20260721T124241_20260721T124316_P05023_N_F_J_001",
+   "date": "2026-07-21",
+   "track": 19,
+   "frame": 76,
+   "direction": "descending",
+   "bandwidthMHz": 40,
+   "polMode": "DH",
+   "channelsPresent": [
+    "HHHH",
+    "HVHV"
+   ],
+   "nativeGridM": 10,
+   "orbitAccuracy": "N",
+   "crid": "P05023",
+   "maturity": "PROVISIONAL"
+  },
+  {
+   "granule": "NISAR_L2_PR_GCOV_028_019_D_076_4005_DHDH_A_20260814T124240_20260814T124315_P05023_N_F_J_001",
+   "date": "2026-08-14",
+   "track": 19,
+   "frame": 76,
+   "direction": "descending",
+   "bandwidthMHz": 40,
+   "polMode": "DH",
+   "channelsPresent": [
+    "HHHH",
+    "HVHV"
+   ],
+   "nativeGridM": 10,
+   "orbitAccuracy": "N",
+   "crid": "P05023",
+   "maturity": "PROVISIONAL"
+  },
+  {
+   "granule": "NISAR_L2_PR_GCOV_029_019_D_076_2005_QPDH_A_20260826T124240_20260826T124315_P05023_N_F_J_001",
+   "date": "2026-08-26",
+   "track": 19,
+   "frame": 76,
+   "direction": "descending",
+   "bandwidthMHz": 20,
+   "polMode": "QP",
+   "channelsPresent": [
+    "HHHH",
+    "HVHV",
+    "HHVV",
+    "VVVV",
+    "VHVH"
+   ],
+   "nativeGridM": 20,
+   "orbitAccuracy": "N",
+   "crid": "P05023",
+   "maturity": "PROVISIONAL"
+  },
+  {
+   "granule": "NISAR_L2_PR_GCOV_030_019_D_076_2005_DHDH_M_20260907T124240_20260907T124314_P05023_N_F_J_001",
+   "date": "2026-09-07",
+   "track": 19,
+   "frame": 76,
+   "direction": "descending",
+   "bandwidthMHz": 20,
+   "polMode": "DH",
+   "channelsPresent": [
+    "HHHH",
+    "HVHV"
+   ],
+   "nativeGridM": 20,
+   "orbitAccuracy": "N",
+   "crid": "P05023",
+   "maturity": "PROVISIONAL"
+  },
+  {
+   "granule": "NISAR_L2_PR_GCOV_031_019_D_076_2005_QPDH_A_20260919T124240_20260919T124314_P05023_F_F_J_001",
+   "date": "2026-09-19",
+   "track": 19,
+   "frame": 76,
+   "direction": "descending",
+   "bandwidthMHz": 20,
+   "polMode": "QP",
+   "channelsPresent": [
+    "HHHH",
+    "HVHV",
+    "HHVV",
+    "VVVV",
+    "VHVH"
+   ],
+   "nativeGridM": 20,
+   "orbitAccuracy": "F",
+   "crid": "P05023",
+   "maturity": "PROVISIONAL"
+  },
+  {
+   "granule": "NISAR_L2_PR_GCOV_032_019_D_076_2005_DHDH_M_20261001T124240_20261001T124314_P05023_N_F_J_001",
+   "date": "2026-10-01",
+   "track": 19,
+   "frame": 76,
+   "direction": "descending",
+   "bandwidthMHz": 20,
+   "polMode": "DH",
+   "channelsPresent": [
+    "HHHH",
+    "HVHV"
+   ],
+   "nativeGridM": 20,
+   "orbitAccuracy": "N",
+   "crid": "P05023",
+   "maturity": "PROVISIONAL"
+  },
+  {
+   "granule": "NISAR_L2_PR_GCOV_033_019_D_076_2005_DHDH_M_20261013T124240_20261013T124315_P05023_N_F_J_001",
+   "date": "2026-10-13",
+   "track": 19,
+   "frame": 76,
+   "direction": "descending",
+   "bandwidthMHz": 20,
+   "polMode": "DH",
+   "channelsPresent": [
+    "HHHH",
+    "HVHV"
+   ],
+   "nativeGridM": 20,
+   "orbitAccuracy": "N",
+   "crid": "P05023",
+   "maturity": "PROVISIONAL"
+  }
+ ],
+ "pair": [
+  "2026-07-09",
+  "2026-10-13"
+ ],
+ "processing": {
+  "pipeline": "calibrated GCOV gamma-0 float -> dB, native 20 m grid, control-patch seasonal shift removed (+2.25 dB)",
+  "ensemble": "12 settings: thresholds 3/4.5/6 dB x median 3/5 x MMU 100/350 px; robust = persists in all 12 (robustness measure, not a probability)",
+  "methodV4": {
+   "pipeline": "calibrated GCOV gamma-0 (float .h5 via Earthdata), dB ensemble, native 20 m grid",
+   "controlPatchShiftDb": {
+    "julDb": -11.41,
+    "octDb": -9.17,
+    "shiftDb": 2.25
+   },
+   "retired": "Browse-era candidates retired 2026-10-31: old CH-01 calibrated dHH +0.74 dB and old CH-03 -0.86 dB (no real NISAR change; browse-render artefacts). Old CH-02 region confirmed and refined (raw dHH +4.6 dB area mean; robust cores +12..+14 dB).",
+   "ghosts": "Ghost outline = July open-water extent (calibrated HH < -20 dB) inside each candidate fringe."
+  }
+ },
+ "drivers": {
+  "dischargeM3sByDate": {
+   "2026-06-27": 37153,
+   "2026-07-09": 35236,
+   "2026-07-21": 50118,
+   "2026-08-14": 26241,
+   "2026-08-26": 28053,
+   "2026-09-07": 27226,
+   "2026-09-19": 26241,
+   "2026-10-01": 16481,
+   "2026-10-13": 11994
+  },
+  "dischargeSource": "GloFAS river discharge via Open-Meteo Flood API, Chilmari point",
+  "rainMmWindows": {
+   "2026-06-27->2026-07-09": 241.3,
+   "2026-07-10->2026-08-14": 432.8,
+   "2026-08-15->2026-09-19": 287.5,
+   "2026-09-20->2026-10-13": 74.4
+  },
+  "rainSource": "NASA POWER PRECTOTCORR daily, Chilmari point",
+  "stage": {
+   "status": "UNAVAILABLE",
+   "source": "BWDB/FFWC Chilmari gauge — no public API found (Step 0 audit)",
+   "proxy": "GloFAS discharge, DERIVED"
+  }
+ },
+ "sensorRace": {
+  "sentinel2": {
+   "acquisitions": 49,
+   "clearUnder20PctTile": 5,
+   "tile": "T45RYJ",
+   "note": "tile-level cloud, not AOI SCL fraction — AOI recompute pending, see DECISIONS.md"
+  },
+  "sentinel1RTC": {
+   "dates": [
+    "2026-07-01",
+    "2026-07-03",
+    "2026-07-13",
+    "2026-07-15",
+    "2026-07-25",
+    "2026-07-27",
+    "2026-08-06",
+    "2026-08-08",
+    "2026-08-18",
+    "2026-08-20",
+    "2026-08-30",
+    "2026-09-01",
+    "2026-09-11",
+    "2026-09-13",
+    "2026-09-23",
+    "2026-09-25",
+    "2026-10-05",
+    "2026-10-07"
+   ],
+   "band": "C-band radar",
+   "relativeOrbits": [
+    114,
+    150
+   ]
+  },
+  "nisar": {
+   "dates": [
+    "2026-06-27",
+    "2026-07-09",
+    "2026-07-21",
+    "2026-08-14",
+    "2026-08-26",
+    "2026-09-07",
+    "2026-09-19",
+    "2026-10-01",
+    "2026-10-13"
+   ],
+   "seen": 9
+  }
+ },
+ "qaFlags": [
+  "2026-09-07 HVHV browse is black over the whole AOI (mean 1.0) - defective render, HV excluded for that date; HH unaffected.",
+  "40 MHz dates (2026-07-21, 2026-08-14) render with different texture - used in the series, never as a change-pair anchor.",
+  "One top cluster was rejected: nodata-black in July, data in October (coverage artefact at the AOI edge).",
+  "Stable-land control patch (east farmland) varies 116-138 intensity across the 9 dates after harmonisation."
+ ],
+ "claims": [
+  {
+   "id": "CL-1",
+   "text": "Calibrated pair 2026-07-09 to 2026-10-13: three western channel-belt patches brightened by +12.4 to +13.6 dB in gamma-0 HH.",
+   "label": "DERIVED",
+   "status": "ACTIVE"
+  },
+  {
+   "id": "CL-2",
+   "text": "GloFAS discharge at Chilmari fell from 35236 to 11994 m3/s between the pair dates (difference 23242 m3/s).",
+   "label": "DERIVED",
+   "status": "ACTIVE"
+  },
+  {
+   "id": "CL-3",
+   "text": "River stage (BWDB/FFWC gauge, metres): no public source obtained. Stage-admission test runs on the discharge proxy, labelled DERIVED, never as gauge metres.",
+   "label": "UNVERIFIED",
+   "status": "LIMITED"
+  },
+  {
+   "id": "CL-4",
+   "text": "Sentinel-1 C-band crosscheck: water-like dark fraction inside each core fell to near zero between 2026-07-13 and 2026-10-05.",
+   "label": "CROSSCHECKED",
+   "status": "ACTIVE"
+  },
+  {
+   "id": "CL-5",
+   "text": "Sentinel-2 NDWI saw no open water in these cores on either clear date (2026-07-04, 2026-10-12): the July radar-dark surface may have been wet mud or shallow water, not deep open water.",
+   "label": "CROSSCHECKED",
+   "status": "ACTIVE"
+  }
+ ],
+ "gap": {
+  "label": "SILENCE",
+  "note": "Cycle 027 (expected 2026-08-02) has no GCOV granule — verified zero in CMR search (Step 0 audit). Brief lists a permanent instrument gap 2026-07-27 22:03 UTC to 2026-08-10 00:55 UTC; the missing cycle falls inside it."
+ },
+ "manifestHash": "sha256:823f370bf941730650fa1ba8ee6b9f9276cb0cd1a8487903a1b4982760fc5e55"
+}
