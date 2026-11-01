@@ -2,11 +2,12 @@ import { useEffect, useMemo, useState } from 'react';
 import { BreakLab, Lens, type Grid } from './lab';
 import { FluviMap, Swipe, prefetchOfflinePack } from './map';
 import { AskField, FieldInbox } from './field';
+import { StageLadder, PhysicsTwin, DecisionBrief, Exports, type Audience } from './panels';
 
 type Label = 'MEASURED' | 'DERIVED' | 'CROSSCHECKED' | 'UNVERIFIED' | 'SIMULATED';
 interface Product { granule: string; date: string; polMode: string; channelsPresent: string[]; bandwidthMHz: number; orbitAccuracy: string }
-interface Patch { id: string; title: string; question: string; centroid: number[]; robustPx: number; fringePx: number; robustAreaHa: number; totalAreaHa: number; pair: string[]; calibrated: { hhDbA: number; hhDbB: number; hvDbA: number; hvDbB: number; dDbHH: number; dDbHV: number }; crosscheck: { reading: string }; label: string; core: number[][]; fringe: number[][]; ghost: number[][]; exposure: { worldPopCore: number; osmBuildingsWithin1km: number } }
-interface Manifest { caseSlug: string; collection: string; doi: string; crid: string; maturity: string; variable: string; analysisGridM: number; haPerPixel: number; manifestHash: string; products: Product[]; pair: string[]; drivers: { dischargeM3sByDate: Record<string, number>; dischargeSource: string; stage: { status: string; source: string } }; sensorRace: { sentinel2: { acquisitions: number; clearUnder20PctTile: number; note: string }; sentinel1RTC: { dates: string[]; band: string }; nisar: { dates: string[]; seen: number } }; claims: { id: string; text: string; label: Label; status: string }[]; gap: { label: string; note: string }; processing: { ensemble: string } }
+interface Patch { id: string; title: string; question: string; centroid: number[]; robustPx: number; fringePx: number; robustAreaHa: number; totalAreaHa: number; pair: string[]; calibrated: { hhDbA: number; hhDbB: number; hvDbA: number; hvDbB: number; dDbHH: number; dDbHV: number }; crosscheck: { reading: string; s1: { dateA: string; dateB: string }; s2: { ndwiWaterFracJul: number; ndwiWaterFracOct: number } }; label: string; core: number[][]; fringe: number[][]; ghost: number[][]; exposure: { worldPopCore: number; worldPopCorePlusFringe: number; osmBuildingsWithin1km: number } }
+interface Manifest { config: { dischargeToleranceM3s: number; toleranceNote: string }; qaFlags: string[]; caseSlug: string; collection: string; doi: string; crid: string; maturity: string; variable: string; analysisGridM: number; haPerPixel: number; manifestHash: string; products: Product[]; pair: string[]; drivers: { dischargeM3sByDate: Record<string, number>; dischargeSource: string; stage: { status: string; source: string } }; sensorRace: { sentinel2: { acquisitions: number; clearUnder20PctTile: number; note: string }; sentinel1RTC: { dates: string[]; band: string }; nisar: { dates: string[]; seen: number } }; claims: { id: string; text: string; label: Label; status: string }[]; gap: { label: string; note: string }; processing: { ensemble: string } }
 
 const ACTS = [
   { n: 'I', name: 'Atlas' }, { n: 'II', name: 'Memory' }, { n: 'III', name: 'Reality' },
@@ -36,6 +37,7 @@ export default function App() {
   const [scenes, setScenes] = useState<Record<string, string> | null>(null);
   const [stageView, setStageView] = useState<'map' | 'svg' | 'swipe'>('map');
   const [packMsg, setPackMsg] = useState('');
+  const [audience, setAudience] = useState<Audience>('analyst');
   const [patches, setPatches] = useState<Patch[]>([]);
   const [act, setAct] = useState(1); // II Memory default
   const [sel, setSel] = useState<Patch | null>(null);
@@ -55,6 +57,7 @@ export default function App() {
   }, []);
 
   const proj = useMemo(() => project(patches), [patches]);
+  useEffect(() => { if (sel) history.replaceState(null, '', `#${sel.id}`); }, [sel]);
   if (!man) return <div className="loading">Loading case pack…</div>;
   const dis = man.drivers.dischargeM3sByDate;
 
@@ -67,6 +70,9 @@ export default function App() {
           <span className="chip">NISAR L2 GCOV · {man.maturity} · CRID {man.crid}</span>
           <span className="chip">{online ? 'Online' : 'Offline pack'}</span>
           <button className="chip btn" onClick={async () => { setPackMsg('caching…'); setPackMsg(await prefetchOfflinePack()); }}>Offline pack{packMsg ? ` · ${packMsg}` : ''}</button>
+          <select value={audience} onChange={e => setAudience(e.target.value as Audience)} className="chip btn" aria-label="Audience lens">
+            <option value="analyst">Analyst</option><option value="decision">Decision-maker</option><option value="public">Public</option>
+          </select>
           <button className="chip btn" onClick={() => setMethods(true)}>Methods &amp; Limits</button>
         </div>
       </header>
@@ -92,6 +98,7 @@ export default function App() {
           <p>Calibrated pair {man.pair[0]} → {man.pair[1]}. Three emergence candidates in the western channel belt. Select a patch on the map.</p>
           <h2>Claim Ledger</h2>
           {man.claims.map(c => <div className="claim" key={c.id}><p>{c.text}</p><Stamp label={c.label} /><span className="status">{c.status}</span></div>)}
+          <StageLadder man={man} />
         </>}
         {act === 2 && <>
           <h1>Act III · Reality</h1>
@@ -111,6 +118,7 @@ export default function App() {
           <div className="row"><span>NISAR L-band radar</span><b>{man.sensorRace.nisar.seen} of {man.sensorRace.nisar.dates.length} dates</b><Stamp label="MEASURED" /></div>
           <p className="note">{man.sensorRace.sentinel2.note}</p>
           {grids && <Lens grid={grids.walkGrid} />}
+          {sel && <PhysicsTwin patch={sel} man={man} />}
         </>}
         {act === 3 && <>
           <h1>Act IV · Break</h1>
@@ -121,7 +129,7 @@ export default function App() {
             <div className="bar"><div className="core" style={{ width: `${(p.robustAreaHa / p.totalAreaHa) * 100}%` }} /></div>
             <Stamp label="DERIVED" /><span className="status">share of tested settings in agreement is a robustness measure, not a probability of being correct</span>
           </div>)}
-          {grids && <BreakLab grid={grids.deltaGrid} />}
+          {grids && <BreakLab grid={grids.deltaGrid} qaFlags={man.qaFlags} />}
           <p className="note">Stage test: BWDB/FFWC gauge {man.drivers.stage.status.toLowerCase()} — pair admission runs on the GloFAS discharge proxy ({dis[man.pair[0]]} → {dis[man.pair[1]]} m³/s), stamped DERIVED. Live threshold recompute arrives with the raster slice; nothing here is canned — these areas are the offline ensemble's.</p>
         </>}
         {act === 4 && <>
@@ -136,16 +144,19 @@ export default function App() {
             <div className="row"><span>Field record</span><b>none yet — evidence returns as awaiting review</b><Stamp label="UNVERIFIED" /></div>
             {sel && <AskField patchId={sel.id} question={sel.question} hashShort={man.manifestHash.replace('sha256:', '').slice(0, 8)} />}
             {sel && <FieldInbox patchId={sel.id} />}
+            {sel && <Exports patch={sel} man={man} />}
             <p className="mono">manifest {man.manifestHash.slice(0, 23)}…</p>
             <p className="note">Granules: {man.products.filter(p => man.pair.includes(p.date)).map(p => p.granule).join(' · ')}</p>
           </>}
         </>}
         {act === 5 && <>
           <h1>Act VI · Impact</h1>
+          {sel && <DecisionBrief patch={sel} man={man} audience={audience} />}
           <p className="lede">Exposure, not damage.</p>
           {patches.map(p => <div className="claim" key={p.id}>
             <p>{p.id} — people in robust core (WorldPop): {p.exposure.worldPopCore}; buildings within 1 km (OSM): {p.exposure.osmBuildingsWithin1km}</p>
-            <Stamp label="DERIVED" /><span className="status">exposure, not damage</span>
+            <span className="stamp stamp-estimated">ESTIMATED</span><span className="status">population is an estimate from a grid, not a count of affected people · exposure, not damage</span>
+            <p className="note">Road length / cropland in footprint: UNAVAILABLE — no road or land-cover intersection layer in the case pack.</p>
           </div>)}
         </>}
       </aside>

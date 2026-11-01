@@ -14,9 +14,44 @@ function useCanvas(draw: (g: CanvasRenderingContext2D, s: number, N: number) => 
 
 /** F9 Break My Finding — live recompute over the real calibrated delta grid.
  *  Counts are exact block counts on the 64x64 block grid (DECISIONS D11: no hectares here). */
-export function BreakLab({ grid }: { grid: Grid }) {
+function medianFilter(vals: (number|null)[][], w: number): (number|null)[][] {
+  if (w === 0) return vals;
+  const r = Math.floor(w / 2), out: (number|null)[][] = [];
+  for (let y = 0; y < 64; y++) { out.push([]); for (let x = 0; x < 64; x++) {
+    const v = vals[y][x]; if (v === null) { out[y].push(null); continue; }
+    const win: number[] = [];
+    for (let dy = -r; dy <= r; dy++) for (let dx = -r; dx <= r; dx++) { const q = vals[y+dy]?.[x+dx]; if (q !== null && q !== undefined) win.push(q); }
+    win.sort((a,b) => a-b); out[y].push(win[Math.floor(win.length/2)]);
+  } }
+  return out;
+}
+function applyMMU(mask: boolean[][], mmu: number): { kept: boolean[][]; blocks: number } {
+  const seen = Array.from({length:64}, () => new Array(64).fill(false));
+  const kept = Array.from({length:64}, () => new Array(64).fill(false));
+  let blocks = 0;
+  for (let y = 0; y < 64; y++) for (let x = 0; x < 64; x++) {
+    if (!mask[y][x] || seen[y][x]) continue;
+    const comp: [number,number][] = []; const stack: [number,number][] = [[y,x]]; seen[y][x] = true;
+    while (stack.length) { const [cy,cx] = stack.pop()!; comp.push([cy,cx]);
+      for (const [dy,dx] of [[1,0],[-1,0],[0,1],[0,-1]]) { const ny = cy+dy, nx = cx+dx;
+        if (ny>=0 && ny<64 && nx>=0 && nx<64 && mask[ny][nx] && !seen[ny][nx]) { seen[ny][nx] = true; stack.push([ny,nx]); } } }
+    if (comp.length >= mmu) { comp.forEach(([cy,cx]) => { kept[cy][cx] = true; }); blocks += comp.length; }
+  }
+  return { kept, blocks };
+}
+
+export function BreakLab({ grid, qaFlags }: { grid: Grid; qaFlags?: string[] }) {
   const [thr, setThr] = useState(4.5);
   const [mode, setMode] = useState<'slider' | 'ensemble'>('slider');
+  const [filt, setFilt] = useState(0);
+  const [mmu, setMmu] = useState(0);
+  const fvals = useMemo(() => medianFilter(grid.values, filt), [grid, filt]);
+  const live = useMemo(() => {
+    const mask = fvals.map(row => row.map(v => v !== null && v > thr));
+    const { kept, blocks } = applyMMU(mask, mmu);
+    return { kept, blocks };
+  }, [fvals, thr, mmu]);
+  const stable = useMemo(() => { let n = 0; for (const row of grid.values) for (const v of row) if (v !== null && Math.abs(v) < 3) n++; return n; }, [grid]);
   const vals = grid.values;
   const stats = useMemo(() => {
     let up = 0, down = 0, total = 0;
@@ -32,11 +67,11 @@ export function BreakLab({ grid }: { grid: Grid }) {
     for (let y = 0; y < 64; y++) for (let x = 0; x < 64; x++) {
       const v = vals[y][x];
       if (v === null) { g.fillStyle = '#0B1118'; }
-      else if (mode === 'slider') g.fillStyle = v > thr ? '#FF6A3D' : v < -thr ? '#2FD0D4' : '#1B2632';
+      else if (mode === 'slider') g.fillStyle = live.kept[y][x] ? '#FF6A3D' : v < -thr ? '#2FD0D4' : '#1B2632';
       else { const k = [3, 4.5, 6].filter(t => v > t).length; g.fillStyle = k === 3 ? '#FF6A3D' : k > 0 ? '#7a3b22' : '#1B2632'; }
       g.fillRect(x * s, y * s, s + 1, s + 1);
     }
-  }, [thr, mode, vals], 352);
+  }, [thr, mode, vals, live], 352);
   return (
     <div className="lab">
       <h2>Challenge Bench — live on the real Δ grid</h2>
@@ -48,7 +83,17 @@ export function BreakLab({ grid }: { grid: Grid }) {
         <div className="labrow"><span>Threshold Δ γ⁰ HH</span><b>&gt; {thr.toFixed(1)} dB</b></div>
         <input type="range" min={2} max={9} step={0.5} value={thr} onChange={e => setThr(Number(e.target.value))} className="slider" aria-label="Delta threshold in dB" />
         <p className="labline">Candidate blocks across the tested setting: <b>{stats.up} brightened</b> · {stats.down} darkened · of {stats.total} valid blocks ({(100 * stats.up / stats.total).toFixed(1)}% brightened).</p>
+        <div className="labrow"><span>Speckle filter (median, on this grid)</span>
+          <select value={filt} onChange={e => setFilt(Number(e.target.value))} aria-label="Median filter window"><option value={0}>none</option><option value={3}>3×3</option><option value={5}>5×5</option></select></div>
+        <div className="labrow"><span>Minimum mapping unit (blocks)</span>
+          <select value={mmu} onChange={e => setMmu(Number(e.target.value))} aria-label="Minimum mapping unit in blocks"><option value={0}>none</option><option value={5}>5</option><option value={20}>20</option><option value={50}>50</option></select></div>
+        <p className="labline">After filter + MMU: <b>{live.blocks} blocks</b> retained on the map. Filter and MMU here operate on the 64×64 block grid; the headline hectares come from the same operations on the native 20 m grid, offline.</p>
       </>}
+      <h3>Why NISAR saw nothing here — the null view</h3>
+      <p className="labline">{stable} of {stats.total} blocks changed by less than ±3 dB — inside the tested change floor at block level, so no change is claimed there. “No detected change” is not “no change exists”: features smaller than a block, or changes under the floor, cannot be evaluated on this grid. <span className="stamp stamp-derived">DERIVED</span></p>
+      <h3>Data quality on this case</h3>
+      {(qaFlags ?? []).map((q, i) => <p className="note" key={i}>· {q}</p>)}
+      <p className="note">Invalid-pixel share per patch: UNAVAILABLE — not stored in the case pack, shown as missing rather than estimated.</p>
       {mode === 'ensemble' && <p className="labline">Ensemble thresholds 3 / 4.5 / 6 dB on this grid: <b>{ens.all} blocks flagged in all 3</b> (robust at block level) · {ens.some} in some (contested). The headline patch areas in hectares come from the native 20 m ensemble, not this block grid.</p>}
       <p className="note">Share of tested settings in agreement is a robustness measure, not a probability of being correct.</p>
     </div>

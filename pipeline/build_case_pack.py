@@ -65,6 +65,7 @@ manifest={
  "claims":claims,
  "gap":{"label":"SILENCE","note":"Cycle 027 (expected 2026-08-02) has no GCOV granule — verified zero in CMR search (Step 0 audit). Brief lists a permanent instrument gap 2026-07-27 22:03 UTC to 2026-08-10 00:55 UTC; the missing cycle falls inside it."},
 }
+manifest["config"]={"dischargeToleranceM3s":5000,"toleranceNote":"Project-declared screening tolerance on the GloFAS discharge proxy, stored in config (brief F4). It is not a gauge-stage tolerance: the BWDB/FFWC gauge series is unavailable, so pair comparability is screened on discharge and labelled DERIVED."}
 manifest["scenesNote"]="Pair-date scenes are calibrated dB renders (fixed -25..0 dB stretch, gcov_process.py); shipped for the A/B swipe. Other dates' browse renders are not shipped in this pack."
 manifest["grids"]={"aoiBoundsLonLat":[89.58,25.44,89.82,25.70],"blockGrid":"64x64 block means over the calibrated pair window (gcov_process.py AOI)","deltaGridNote":"Mean calibrated HH gamma-0 change per block, tie-point referenced. Block extent is not stored in the source file, so the Break lab reports exact block counts and shares, never hectares, for this grid. Hectares come only from the native 20 m ensemble.","walkGridNote":"2026-10-13 NISAR HH gamma-0 block means in dB."}
 canon=json.dumps(manifest,sort_keys=True,ensure_ascii=False)
