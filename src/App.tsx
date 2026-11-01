@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { BreakLab, Lens, type Grid } from './lab';
 
 type Label = 'MEASURED' | 'DERIVED' | 'CROSSCHECKED' | 'UNVERIFIED' | 'SIMULATED';
 interface Product { granule: string; date: string; polMode: string; channelsPresent: string[]; bandwidthMHz: number; orbitAccuracy: string }
@@ -29,6 +30,7 @@ const poly = (pts: number[][], proj: (p: number[]) => readonly [number, number])
 
 export default function App() {
   const [man, setMan] = useState<Manifest | null>(null);
+  const [grids, setGrids] = useState<{ deltaGrid: Grid; walkGrid: Grid } | null>(null);
   const [patches, setPatches] = useState<Patch[]>([]);
   const [act, setAct] = useState(1); // II Memory default
   const [sel, setSel] = useState<Patch | null>(null);
@@ -37,6 +39,7 @@ export default function App() {
 
   useEffect(() => {
     fetch('/case/jamuna-chilmari/manifest.json').then(r => r.json()).then(setMan);
+    fetch('/case/jamuna-chilmari/grids.json').then(r => r.json()).then(setGrids);
     fetch('/case/jamuna-chilmari/case.json').then(r => r.json()).then(d => { setPatches(d.patches); setSel(d.patches[0]); });
     const f = () => setOnline(navigator.onLine);
     window.addEventListener('online', f); window.addEventListener('offline', f);
@@ -100,6 +103,7 @@ export default function App() {
           <div className="row"><span>Sentinel-1 C-band radar</span><b>{man.sensorRace.sentinel1RTC.dates.length} dates</b><Stamp label="MEASURED" /></div>
           <div className="row"><span>NISAR L-band radar</span><b>{man.sensorRace.nisar.seen} of {man.sensorRace.nisar.dates.length} dates</b><Stamp label="MEASURED" /></div>
           <p className="note">{man.sensorRace.sentinel2.note}</p>
+          {grids && <Lens grid={grids.walkGrid} />}
         </>}
         {act === 3 && <>
           <h1>Act IV · Break</h1>
@@ -110,6 +114,7 @@ export default function App() {
             <div className="bar"><div className="core" style={{ width: `${(p.robustAreaHa / p.totalAreaHa) * 100}%` }} /></div>
             <Stamp label="DERIVED" /><span className="status">share of tested settings in agreement is a robustness measure, not a probability of being correct</span>
           </div>)}
+          {grids && <BreakLab grid={grids.deltaGrid} />}
           <p className="note">Stage test: BWDB/FFWC gauge {man.drivers.stage.status.toLowerCase()} — pair admission runs on the GloFAS discharge proxy ({dis[man.pair[0]]} → {dis[man.pair[1]]} m³/s), stamped DERIVED. Live threshold recompute arrives with the raster slice; nothing here is canned — these areas are the offline ensemble's.</p>
         </>}
         {act === 4 && <>
