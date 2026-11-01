@@ -77,3 +77,11 @@
 .swipe .slider{max-width:640px;margin:8px auto;display:block}
 .pad{padding:16px}
 .maplibregl-ctrl-attrib{font-size:9px}
+
+.qr{width:176px;height:176px;background:#fff;padding:4px}
+.dossier a{color:#0F6E7C;word-break:break-all}
+.revnote{width:100%;padding:8px;margin:6px 0;font-family:var(--sans)}
+.revbtns{display:flex;gap:6px;flex-wrap:wrap}
+.chip.dark{color:var(--paper-ink);border-color:#b9b090}.chip.dark:disabled{opacity:.4}
+.row.asbtn{width:100%;background:none;border:none;border-bottom:1px solid #ddd5c0;cursor:pointer;text-align:left;font-family:var(--mono)}
+.row.asbtn:hover{background:#faf7ee}

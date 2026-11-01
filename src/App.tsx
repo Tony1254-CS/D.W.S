@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { BreakLab, Lens, type Grid } from './lab';
 import { FluviMap, Swipe, prefetchOfflinePack } from './map';
+import { AskField, FieldInbox } from './field';
 
 type Label = 'MEASURED' | 'DERIVED' | 'CROSSCHECKED' | 'UNVERIFIED' | 'SIMULATED';
 interface Product { granule: string; date: string; polMode: string; channelsPresent: string[]; bandwidthMHz: number; orbitAccuracy: string }
@@ -130,9 +131,11 @@ export default function App() {
             <div className="row"><span>Collection DOI</span><b>{man.doi}</b></div>
             <div className="row"><span>Maturity · CRID</span><b>{man.maturity} · {man.crid}</b></div>
             <div className="row"><span>Variable</span><b>{man.variable}</b></div>
-            <div className="row"><span>Area formula</span><b>{sel.robustPx} px × {man.haPerPixel} ha = {sel.robustAreaHa} ha</b><Stamp label="DERIVED" /></div>
+            <button className="row asbtn" onClick={() => setStageView('svg')} title="Show these pixels on the plate"><span>Area formula — click to see the pixels</span><b>{sel.robustPx} px × {man.haPerPixel} ha = {sel.robustAreaHa} ha</b><Stamp label="DERIVED" /></button>
             <div className="row"><span>Grid</span><b>{man.analysisGridM} m analysis grid</b></div>
             <div className="row"><span>Field record</span><b>none yet — evidence returns as awaiting review</b><Stamp label="UNVERIFIED" /></div>
+            {sel && <AskField patchId={sel.id} question={sel.question} hashShort={man.manifestHash.replace('sha256:', '').slice(0, 8)} />}
+            {sel && <FieldInbox patchId={sel.id} />}
             <p className="mono">manifest {man.manifestHash.slice(0, 23)}…</p>
             <p className="note">Granules: {man.products.filter(p => man.pair.includes(p.date)).map(p => p.granule).join(' · ')}</p>
           </>}
